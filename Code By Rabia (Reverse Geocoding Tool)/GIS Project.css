@@ -1,0 +1,43 @@
+#map {  /* CSS styling for the map */
+  height: 80%;
+}
+
+html,
+
+
+body { /* CSS styling for the body of the HTML code */
+  height: 100%;
+  margin: 0;
+  padding: 0; /* defines the inner spacing within an element */
+}
+
+#open-dialog { /* CSS styling for the dialog button */
+   text-align: center;
+   top: 30px;
+   left: 30%;
+}
+
+#floating-panel { /* Styling for the floating panel containing the operation of reverse geocoding */
+  position: absolute;
+  top: 10px;
+  left: 25%;
+  background-color: #fff;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: "Times New Roman", "sans-serif";
+}
+
+#floating-panel {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  margin-left: -180px;
+  width: 550px;
+  z-index: 5; /* determines which elements appear on top of others */
+  background-color: #fff;
+  padding: 5px; 
+}
+
+#latlng { /* CSS styling for the marker */
+  width: 225px;
+}
