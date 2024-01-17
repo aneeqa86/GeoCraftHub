@@ -294,4 +294,4 @@ function LatLong(geocoder, map, infowindow) { //Function allows user to type in 
 window.initMap = initMap;
 
 
-****** CODE BY RABIA ****** 
+****** CODE BY RABIA ******
