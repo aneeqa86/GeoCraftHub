@@ -97,33 +97,35 @@ input::before {
 	font-size: 10pt;
 }
 
-****** CODE BY RABIA ****** 
+/****** CODE BY RABIA ******/
 
-#map {
-  height: 100%;
+#map {  /* CSS styling for the map */
+  height: 80%;
 }
 
 html,
 
 
-body {
+body { /* CSS styling for the body of the HTML code */
   height: 100%;
   margin: 0;
-  padding: 0;
+  padding: 0; /* defines the inner spacing within an element */
 }
 
-#floating-panel {
+#open-dialog { /* CSS styling for the dialog button */
+   text-align: center;
+   top: 30px;
+   left: 30%;
+}
+
+#floating-panel { /* Styling for the floating panel containing the operation of reverse geocoding */
   position: absolute;
   top: 10px;
   left: 25%;
-  z-index: 5;
   background-color: #fff;
-  padding: 5px;
   border: 1px solid #999;
   text-align: center;
   font-family: "Times New Roman", "sans-serif";
-  line-height: 30px;
-  padding-left: 10px;
 }
 
 #floating-panel {
@@ -131,17 +133,16 @@ body {
   top: 5px;
   left: 50%;
   margin-left: -180px;
-  width: 350px;
-  z-index: 5;
+  width: 550px;
+  z-index: 5; /* determines which elements appear on top of others */
   background-color: #fff;
-  padding: 5px;
-  border: 1px solid #999;
+  padding: 5px; 
 }
 
-#latlng {
+#latlng { /* CSS styling for the marker */
   width: 225px;
 }
 
-****** CODE BY RABIA ****** 
+/****** CODE BY RABIA ******/
 
 
