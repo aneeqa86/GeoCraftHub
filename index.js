@@ -244,3 +244,54 @@ L.Control.Button = L.Control.extend({
 });
 var control = new L.Control.Button()
 control.addTo(map); 
+
+
+****** CODE BY RABIA ******
+
+function initMap() {
+  const map = new google.maps.Map(document.getElementById("map"), { //Adding a basemap; can be changed later as there is a basemap already provided
+    zoom: 8,
+    center: { lat: 40.731, lng: -73.997 }, //Giving example coordinates 
+  });
+  const geocoder = new google.maps.Geocoder(); //A Google maps function that can give longitude or latitude
+  const infowindow = new google.maps.InfoWindow(); // a graphical pop-up or overlay that displays additional information when a marker or some other interactive element on a map is clicked. 
+
+  document.getElementById("enter").addEventListener("click", () => { //Calls the enter/submit button in HTML to allow user to convert the coordinates
+    geocodeLatLng(geocoder, map, infowindow);
+  });
+}
+
+
+function LatLong(geocoder, map, infowindow) { //Function allows user to type in the longitudes and latitudes 
+  const input = document.getElementById("latlong").value; //calls the the HTML function for long/lat
+  const string = input.split(",", 2); //Function to split a string into an array of substrings based on a specified separator
+  const latlong = {
+    lat: parseFloat(latlngStr[0]),
+    long: parseFloat(latlngStr[1]),
+  }; 
+    
+
+  geocoder 
+    .geocode({ location: latlng }) //Function is associated with geocoding
+    .then((response) => { //Function is a method that can be called on a promise object, which are a mechanism for handling asynchronous operations. 
+      if (response.results[0]) {
+        map.setZoom(11);
+
+        const marker = new google.maps.Marker({ //Adds a marker on the resultant address
+          position: latlng,
+          map: map,
+        });
+
+        infowindow.setContent(response.results[0].formatted_address);
+        infowindow.open(map, marker);
+      } else {
+        window.alert("No results found");
+      }
+    })
+    .catch((e) => window.alert("Geocoder failed due to: " + e));
+}
+
+window.initMap = initMap;
+
+
+****** CODE BY RABIA ******

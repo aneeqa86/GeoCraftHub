@@ -93,3 +93,52 @@
 </body>
 
 </html>
+
+<!-- ****** Code by Rabia ****** -->
+
+<html> 
+  <head>
+    <h1>Reverse Geocoding</h1> <!--Main Title -->
+    <link rel="stylesheet" type="text/css" href="GIS%20Project.css" /> <!-- Linking the CSS code for the project -->
+    <script type="module" src="GIS%20Project.js"></script> <!-- Linking the javascript code for the project -->
+  </head>
+    
+  <body>
+     <button id="open-dialog">What is Reverse Geocoding ?</button> <!-- Creating a button to display information about what the tool is -->
+
+   <dialog id="my-dialog"> <!-- Dialog containing information about the tool -->
+      <p>Reverse Geocoding is the process of converting longitude and latitudes to physical, readable addresses. By entering longitude and latitudes of your desired location, you can get the resultant physical address</p>
+      <button id="close-dialog">Close</button>
+   </dialog> 
+      
+      <div id="floating-panel"> <!-- Element defining the input of longitude and latitude of the user -->
+        <h2>Enter latitude and longitude</h2>
+          <h3>e.g 33.6844, 73.0479</h3>
+        <input id="latlong" type="text" value="" /> <!-- User enters the long/lat -->
+         <input id="enter" type="button" value="Reverse Geocode" /> <!-- The code runs and shows the resultant address -->
+        
+    </div>
+    <div id="map"></div> <!-- Element to display the map-->
+
+    <script> //JS for defining the button, displaying info about the tool
+      const openButton = document.getElementById('open-dialog'); //Clicking the button
+      const dialog = document.getElementById('my-dialog'); //Info the button displays
+      const closeButton = document.getElementById('close-dialog'); //Closing of the button
+
+      openButton.addEventListener('click', () => { //
+         dialog.showModal(); //displays the dialog as a modal, over the top of any other dialogs that might be present.
+      });
+
+      closeButton.addEventListener('click', () => { // enables the execution of a function or a block of code in response to interaction by user
+         dialog.close();
+      });
+   </script>
+      
+      <script 
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+      defer
+    ></script> <!-- Linking a map through Google Maps API -->
+  </body>
+</html>
+
+<!-- ****** Code by Rabia ****** -->
