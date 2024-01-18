@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaflet Map with AccuWeather</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 400px;
+    }
+
+    #weatherBox {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="weatherBox">
+  <h2>Islamabad Weather</h2>
+  <p id="weatherInfo"></p>
+  <button id="weatherButton">Get Weather</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+  var map = L.map('map').setView([33.6844, 73.0479], 12); // Islamabad coordinates and zoom level
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Islamabad city key
+  var cityKey = '261158';
+
+  // Replace 'YOUR_API_KEY' with your AccuWeather API key
+  var apiKey = 'l8s6nBjUDC8z0ztQvFlfxx59JbsjZzua';
+
+  document.getElementById('weatherButton').addEventListener('click', function() {
+    var accuWeatherUrl = http://dataservice.accuweather.com/currentconditions/v1/${cityKey}?apikey=${apiKey}&metric=true; // Specify metric=true for Celsius
+
+    $.get(accuWeatherUrl, function (data) {
+      if (data && data.length > 0) {
+        var weatherInfo = data[0];
+        document.getElementById('weatherInfo').innerHTML = <b>Temperature:</b> ${weatherInfo.Temperature.Metric.Value} °C<br><b>Condition:</b> ${weatherInfo.WeatherText};
+      } else {
+        alert('Error fetching weather data.');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
