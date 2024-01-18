@@ -1,0 +1,176 @@
+//Code By Musa
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Spatial Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+
+        button {
+            padding: 10px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #map {
+            height: 70vh;
+            width: 100%;
+        }
+
+        #spatialAnalysisButtons {
+            display: none;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    </style>
+    <!-- Leaflet Stylesheet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>GIS Spatial Analysis</h1>
+    </header>
+
+    <!-- Main Page -->
+    <div id="map"></div>
+    <button onclick="openSpatialAnalysisPage()">Perform Spatial Analysis</button>
+    <div id="spatialAnalysisButtons">
+        <button onclick="performBufferAnalysis()">Buffer Analysis</button>
+        <button onclick="performCenterOfMassAnalysis()">Center of Mass Analysis</button>
+        <button onclick="performDistanceAnalysis()">Distance Analysis</button>
+        <button onclick="performAreaAnalysis()">Area Analysis</button>
+        <button onclick="performCentroidAnalysis()">Centroid Analysis</button>
+        <button onclick="performVoronoiAnalysis()">Voronoi Analysis</button>
+        <button onclick="performTINAnalysis()">TIN Analysis</button>
+    
+    </div>
+
+    <!-- Leaflet Script -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Mapbox Turf.js Library -->
+   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 2); // Initial center coordinates and zoom level
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        function openSpatialAnalysisPage() {
+            document.getElementById('spatialAnalysisButtons').style.display = 'flex';
+        }
+
+        
+        var sampleData = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [0, 0]
+                    },
+                    "properties": {
+                        "name": "Point 1"
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [10, 10]
+                    },
+                    "properties": {
+                        "name": "Point 2"
+                    }
+                },
+                
+            ]
+        };
+
+        function clearMap() {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.LayerGroup) {
+                    map.removeLayer(layer);
+                }
+            });
+        }
+
+        function showResultOnMap(result) {
+            clearMap();
+            L.geoJSON(result).addTo(map);
+        }
+
+        function performBufferAnalysis() {
+         
+            var result = turf.buffer(sampleData, 10, { units: 'kilometers' });
+            showResultOnMap(result);
+        }
+
+        function performCenterOfMassAnalysis() {
+           
+            var result = turf.centerOfMass(sampleData);
+            showResultOnMap(turf.circle(result.geometry.coordinates, { radius: 5, units: 'kilometers' }));
+        }
+
+        function performDistanceAnalysis() {
+            
+            var result = turf.distance(sampleData.features[0], sampleData.features[1], { units: 'kilometers' });
+            var lineString = turf.lineString([sampleData.features[0].geometry.coordinates, sampleData.features[1].geometry.coordinates]);
+            showResultOnMap(lineString);
+        }
+
+        function performAreaAnalysis() {
+          
+            var result = turf.area(sampleData);
+            alert("Total Area: " + result + " square kilometers");
+        }
+
+        function performCentroidAnalysis() {
+            
+            var result = turf.centroid(sampleData);
+            showResultOnMap(result);
+        }
+
+        function performVoronoiAnalysis() {
+           
+            var result = turf.voronoi(sampleData);
+            showResultOnMap(result);
+        }
+
+        function performTINAnalysis() {
+           
+            var result = turf.tin(sampleData);
+            showResultOnMap(result);
+        }
+
+     
+    </script>
+</body>
+</html>
+
+// Code by Musa
