@@ -244,3 +244,110 @@ L.Control.Button = L.Control.extend({
 });
 var control = new L.Control.Button()
 control.addTo(map); 
+
+
+// Code By Musa
+ <!-- Leaflet Script -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Mapbox Turf.js Library -->
+   <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 2); 
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        function openSpatialAnalysisPage() {
+            document.getElementById('spatialAnalysisButtons').style.display = 'flex';
+        }
+
+        
+        var sampleData = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [0, 0]
+                    },
+                    "properties": {
+                        "name": "Point 1"
+                    }
+                },
+                {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [10, 10]
+                    },
+                    "properties": {
+                        "name": "Point 2"
+                    }
+                },
+                
+            ]
+        };
+
+        function clearMap() {
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.LayerGroup) {
+                    map.removeLayer(layer);
+                }
+            });
+        }
+
+        function showResultOnMap(result) {
+            clearMap();
+            L.geoJSON(result).addTo(map);
+        }
+
+        function performBufferAnalysis() {
+       
+            var result = turf.buffer(sampleData, 10, { units: 'kilometers' });
+            showResultOnMap(result);
+        }
+
+        function performCenterOfMassAnalysis() {
+         
+            var result = turf.centerOfMass(sampleData);
+            showResultOnMap(turf.circle(result.geometry.coordinates, { radius: 5, units: 'kilometers' }));
+        }
+
+        function performDistanceAnalysis() {
+           
+            var result = turf.distance(sampleData.features[0], sampleData.features[1], { units: 'kilometers' });
+            var lineString = turf.lineString([sampleData.features[0].geometry.coordinates, sampleData.features[1].geometry.coordinates]);
+            showResultOnMap(lineString);
+        }
+
+        function performAreaAnalysis() {
+            
+            var result = turf.area(sampleData);
+            alert("Total Area: " + result + " square kilometers");
+        }
+
+        function performCentroidAnalysis() {
+           
+            var result = turf.centroid(sampleData);
+            showResultOnMap(result);
+        }
+
+        function performVoronoiAnalysis() {
+            
+            var result = turf.voronoi(sampleData);
+            showResultOnMap(result);
+        }
+
+        function performTINAnalysis() {
+            
+            var result = turf.tin(sampleData);
+            showResultOnMap(result);
+        }
+
+    </script>
+
+// Code by Musa
+
+
