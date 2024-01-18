@@ -93,3 +93,40 @@
 </body>
 
 </html>
+
+//code by Musa
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Spatial Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+    <header>
+        <h1>GIS Spatial Analysis</h1>
+    </header>
+
+    <div id="map"></div>
+    <button onclick="openSpatialAnalysisPage()">Perform Spatial Analysis</button>
+    <div id="spatialAnalysisButtons">
+        <button onclick="performBufferAnalysis()">Buffer Analysis</button>
+        <button onclick="performCenterOfMassAnalysis()">Center of Mass Analysis</button>
+        <button onclick="performDistanceAnalysis()">Distance Analysis</button>
+        <button onclick="performAreaAnalysis()">Area Analysis</button>
+        <button onclick="performCentroidAnalysis()">Centroid Analysis</button>
+        <button onclick="performVoronoiAnalysis()">Voronoi Analysis</button>
+        <button onclick="performTINAnalysis()">TIN Analysis</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
+
+
+// Code By Musa
