@@ -1,0 +1,1781 @@
+//Code By Samra And Aimen
+
+
+//mergefinal
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .overlay-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input, .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Leaflet Map Container -->
+<div id="map"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('merge')">Merge</button>
+    <!-- Add buttons for other overlay operations -->
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Merge</h2>
+
+    <!-- Input fields for parameters -->
+    <label for="inputDataset">Input Dataset:</label>
+    <input type="file" id="inputDataset" accept=".shp">
+
+    <label for="outputDataset">Output Dataset:</label>
+    <input type="text" id="outputDataset" placeholder="Enter output dataset location">
+
+    <label for="fieldMapFeature">Field Map Feature:</label>
+    <input type="file" id="fieldMapFeature" accept=".shp">
+
+    <!-- Add more input fields for other parameters -->
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        // Display the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        // Close the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        // Get selected overlay operation
+        var overlayOperation = "Merge";
+
+        // Get parameters based on the selected operation
+        var inputDataset = document.getElementById('inputDataset').value;
+        var outputDataset = document.getElementById('outputDataset').value;
+        var fieldMapFeature = document.getElementById('fieldMapFeature').value;
+
+        // Replace with the actual dev.gis API endpoint and key
+        var apiKey = 'YOUR_API_KEY';
+        var apiEndpoint = 'YOUR_API_ENDPOINT';
+
+        // Make an API call using fetch
+        fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + apiKey,
+                // Add any other headers as needed
+            },
+            body: JSON.stringify({
+                operation: overlayOperation,
+                inputDataset: inputDataset,
+                outputDataset: outputDataset,
+                fieldMapFeature: fieldMapFeature,
+                // Add more parameters as needed
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the API response
+            console.log(data);
+            // Add your logic to handle the response from the API
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+        // Close the dialog after executing the tool
+        closeOverlayDialog();
+    }
+</script>
+
+</body>
+</html>
+// mergefinal
+
+//menu
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .icon {
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .dialog {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .dialog h2 {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .leaflet-map {
+            width: 80vw;
+            height: 50vh;
+            max-width: 800px;
+        }
+    </style>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map;
+
+        function initMap() {
+            map = L.map('map').setView([0, 0], 2); // Center the map at (0, 0) with zoom level 2
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        function showMapDialog() {
+            var dialog = document.getElementById('mapDialog');
+            dialog.style.display = 'block';
+        }
+
+        function showSelectedMap() {
+            var dialog = document.getElementById('mapDialog');
+            var selectedMap = document.getElementById('mapDropdown').value;
+            
+            // You can perform further actions based on the selected map operation
+            console.log('Selected Overlay Analysis:', selectedMap);
+
+            // For demonstration purposes, hide the dialog after selecting an overlay analysis
+            dialog.style.display = 'none';
+        }
+
+        // Initialize the map when the page is loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            initMap();
+        });
+    </script>
+    <title>World Map Application</title>
+</head>
+<body>
+
+    <!-- Overlay Analysis Icon -->
+    <div id="mapIcon" class="icon" onclick="showMapDialog()">
+        Overlay Analysis
+    </div>
+
+    <!-- Leaflet Map Container -->
+    <div id="map" class="leaflet-map"></div>
+
+    <!-- Overlay Analysis Dialog -->
+    <div id="mapDialog" class="dialog">
+        <h2>Overlay Analysis Types</h2>
+        <select id="mapDropdown">
+            <option value="buffer">Buffer</option>
+            <option value="union">Union</option>
+            <option value="clip">Clip</option>
+            <option value="mask">Mask</option>
+            <option value="merge">Merge</option>
+            <option value="identity">Identity</option>
+            <option value="dissolve">Dissolve</option>
+            <option value="difference">Difference</option>
+            <option value="erase">Erase</option>
+        </select>
+        <button onclick="showSelectedMap()">Apply Overlay Analysis</button>
+    </div>
+
+</body>
+</html>
+
+//menu
+
+//buffer
+<!<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+
+        .overlay-dialog {
+            display: none;
+            background-color: #fff;
+            border: 3px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Higher z-index for overlay dialog */
+            max-width: 250px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input, .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .map-container {
+            height: 70vh;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Leaflet Map Container -->
+<div id="map" class="map-container"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('buffer')">Buffer</button>
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Buffer</h2>
+
+    <!-- Input fields for parameters -->
+    <label for="inputFeatures">Input Features:</label>
+    <input type="file" id="inputFeatures" accept=".shp">
+    
+    <label for="outputFeatures">Output Features:</label>
+    <input type="text" id="outputFeatures" placeholder="Enter output features location">
+
+    <label for="bufferDistance">Buffer Distance:</label>
+    <input type="text" id="bufferDistance" placeholder="Enter buffer distance">
+
+    <label for="bufferType">Buffer Type:</label>
+    <select id="bufferType">
+        <option value="flat">Flat</option>
+        <option value="round">Round</option>
+    </select>
+
+    <label for="bufferUnits">Buffer Units:</label>
+    <select id="bufferUnits">
+        <option value="feet">Feet</option>
+        <option value="meters">Meters</option>
+        <option value="kilometers">Kilometers</option>
+        <option value="miles">Miles</option>
+    </select>
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        // Display the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        // Close the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        // Implement your overlay analysis logic here
+
+        // For demonstration, showing an alert with collected information
+        alert("Overlay analysis initiated!");
+
+        // Close the dialog after executing the tool
+        closeOverlayDialog();
+    }
+</script>
+
+</body>
+</html>
+
+//buffer
+
+//clipf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+
+        .overlay-dialog {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Higher z-index for overlay dialog */
+            max-width: 300px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .leaflet-container {
+            z-index: 1000; /* Lower z-index for the map */
+            height: 400px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input, .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Leaflet Map Container -->
+<div id="map" class="leaflet-container"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('clip')">Clip</button>
+    <!-- Add buttons for other overlay operations -->
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Clip</h2>
+
+    <!-- Input fields for parameters -->
+    <label for="inputFeatures">Input Features:</label>
+    <input type="file" id="inputFeatures" accept=".shp">
+    
+    <label for="clipFeatures">Clip Features:</label>
+    <input type="file" id="clipFeatures" accept=".shp">
+    
+    <label for="outputFeatures">Output Features:</label>
+    <input type="file" id="outputFeatures" accept=".shp">
+    
+    <label for="XYtolerance">XY tolerance:</label>
+    <input type="text" id="XYtolerance" placeholder="Enter XY tolerance">
+    
+    <label for="distanceType">Distance Type:</label>
+    <select id="distanceType">
+        <option value="value">Value</option>
+        <option value="field">Field</option>
+    </select>
+
+    <!-- Add more input fields for other parameters -->
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/turf@7.0.0"></script>
+<script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        // Display the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        // Close the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        // Get selected overlay operation
+        var overlayOperation = "Clip";
+
+        // Get parameters based on the selected operation
+        var inputFeatures = document.getElementById('inputFeatures').files[0];
+        var clipFeatures = document.getElementById('clipFeatures').files[0];
+        var outputFeatures = document.getElementById('outputFeatures').files[0];
+        var distanceType = document.getElementById('distanceType').value;
+        var XYtolerance = parseFloat(document.getElementById('XYtolerance').value);
+        
+        // Validate input
+        if (!inputFeatures || !clipFeatures || !outputFeatures) {
+            alert("Please provide input, clip, and output features.");
+            return;
+        }
+
+        // Read input GeoJSON files
+        var inputReader = new FileReader();
+        var clipReader = new FileReader();
+
+        inputReader.onload = function (event) {
+            var inputGeojson = JSON.parse(event.target.result);
+
+            clipReader.onload = function (event) {
+                var clipGeojson = JSON.parse(event.target.result);
+
+                // Perform Turf.js Clip operation
+                var clippedResult = turf.clip(inputGeojson, clipGeojson);
+
+                // Display the result on the map
+                L.geoJSON(clippedResult).addTo(map);
+
+                // Close the dialog after executing the tool
+                closeOverlayDialog();
+            };
+
+            clipReader.readAsText(clipFeatures);
+        };
+
+        inputReader.readAsText(inputFeatures);
+    }
+</script>
+
+</body>
+</html>
+//clipf
+
+//difference
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+
+        .overlay-dialog {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Higher z-index for overlay dialog */
+            max-width: 300px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .leaflet-container {
+            z-index: 1000; /* Lower z-index for the map */
+            height: 400px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input, .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Leaflet Map Container -->
+<div id="map" class="leaflet-container"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('difference')">Difference</button>
+    <!-- Add buttons for other overlay operations -->
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Difference</h2>
+
+    <!-- Input fields for parameters -->
+    <label for="inputFeatures">Input Features:</label>
+    <input type="file" id="inputFeatures" accept=".geojson">
+    
+    <label for="updateFeatures">Update Features:</label>
+    <input type="file" id="updateFeatures" accept=".geojson">
+    
+    <label for="outputFeatures">Output Features:</label>
+    <input type="file" id="outputFeatures" accept=".geojson">
+    
+    <label for="joinattributes">Join Attribute:</label>
+    <select id="joinattributes">
+        <option value="none">None</option>
+        <option value="list">List</option>
+        <option value="all">All</option>
+    </select>
+    
+    <label for="XYtolerance">XY tolerance:</label>
+    <input type="text" id="XYtolerance" placeholder="Enter XY tolerance">
+    
+    <label for="distanceType">Distance Type:</label>
+    <select id="distanceType">
+        <option value="value">Value</option>
+        <option value="field">Field</option>
+    </select>
+
+    <!-- Add more input fields for other parameters -->
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/turf@7.0.0"></script>
+<script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        // Display the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        // Close the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        // Get selected overlay operation
+        var overlayOperation = "Difference";
+
+        // Get parameters based on the selected operation
+        var inputFeatures = document.getElementById('inputFeatures').files[0];
+        var updateFeatures = document.getElementById('updateFeatures').files[0];
+        var outputFeatures = document.getElementById('outputFeatures').files[0];
+        var joinattributes = document.getElementById('joinattributes').value;
+        var distanceType = document.getElementById('distanceType').value;
+        var XYtolerance = parseFloat(document.getElementById('XYtolerance').value);
+        
+        // Validate input
+        if (!inputFeatures || !updateFeatures || !outputFeatures) {
+            alert("Please provide input, update, and output features.");
+            return;
+        }
+
+        // Read input GeoJSON files
+        var inputReader = new FileReader();
+        var updateReader = new FileReader();
+
+        inputReader.onload = function (event) {
+            var inputGeojson = JSON.parse(event.target.result);
+
+            updateReader.onload = function (event) {
+                var updateGeojson = JSON.parse(event.target.result);
+
+                // Perform Turf.js Difference operation
+                var differenceResult = turf.difference(inputGeojson, updateGeojson);
+
+                // Display the result on the map
+                L.geoJSON(differenceResult).addTo(map);
+
+                // Close the dialog after executing the tool
+                closeOverlayDialog();
+            };
+
+            updateReader.readAsText(updateFeatures);
+        };
+
+        inputReader.readAsText(inputFeatures);
+    }
+</script>
+
+</body>
+</html>
+
+//Difference
+
+//dissolve
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+
+        .overlay-dialog {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Higher z-index for overlay dialog */
+            max-width: 300px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .leaflet-container {
+            z-index: 1000; /* Lower z-index for the map */
+            height: 400px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input, .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Leaflet Map Container -->
+<div id="map" class="leaflet-container"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('difference')">Difference</button>
+    <!-- Add buttons for other overlay operations -->
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Difference</h2>
+
+    <!-- Input fields for parameters -->
+    <label for="inputFeatures">Input Features:</label>
+    <input type="file" id="inputFeatures" accept=".geojson">
+    
+    <label for="updateFeatures">Update Features:</label>
+    <input type="file" id="updateFeatures" accept=".geojson">
+    
+    <label for="outputFeatures">Output Features:</label>
+    <input type="file" id="outputFeatures" accept=".geojson">
+    
+    <label for="joinattributes">Join Attribute:</label>
+    <select id="joinattributes">
+        <option value="none">None</option>
+        <option value="list">List</option>
+        <option value="all">All</option>
+    </select>
+    
+    <label for="XYtolerance">XY tolerance:</label>
+    <input type="text" id="XYtolerance" placeholder="Enter XY tolerance">
+    
+    <label for="distanceType">Distance Type:</label>
+    <select id="distanceType">
+        <option value="value">Value</option>
+        <option value="field">Field</option>
+    </select>
+
+    <!-- Add more input fields for other parameters -->
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/turf@7.0.0"></script>
+<script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        // Display the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        // Close the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        // Get selected overlay operation
+        var overlayOperation = "Difference";
+
+        // Get parameters based on the selected operation
+        var inputFeatures = document.getElementById('inputFeatures').files[0];
+        var updateFeatures = document.getElementById('updateFeatures').files[0];
+        var outputFeatures = document.getElementById('outputFeatures').files[0];
+        var joinattributes = document.getElementById('joinattributes').value;
+        var distanceType = document.getElementById('distanceType').value;
+        var XYtolerance = parseFloat(document.getElementById('XYtolerance').value);
+        
+        // Validate input
+        if (!inputFeatures || !updateFeatures || !outputFeatures) {
+            alert("Please provide input, update, and output features.");
+            return;
+        }
+
+        // Read input GeoJSON files
+        var inputReader = new FileReader();
+        var updateReader = new FileReader();
+
+        inputReader.onload = function (event) {
+            var inputGeojson = JSON.parse(event.target.result);
+
+            updateReader.onload = function (event) {
+                var updateGeojson = JSON.parse(event.target.result);
+
+                // Perform Turf.js Difference operation
+                var differenceResult = turf.difference(inputGeojson, updateGeojson);
+
+                // Display the result on the map
+                L.geoJSON(differenceResult).addTo(map);
+
+                // Close the dialog after executing the tool
+                closeOverlayDialog();
+            };
+
+            updateReader.readAsText(updateFeatures);
+        };
+
+        inputReader.readAsText(inputFeatures);
+    }
+</script>
+
+</body>
+</html>
+
+//dissolve
+
+//erase
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #map {
+            height: 400px;
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .overlay-dialog {
+            display: none;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input,
+        .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Leaflet Map Container -->
+    <div id="map"></div>
+
+    <!-- Erase Analysis Dialog -->
+    <div id="eraseDialog" class="overlay-dialog">
+        <h2 style="text-align: center; color: #333;">Erase</h2>
+
+        <!-- Input fields for parameters -->
+        <label for="inputFeatures">Input Features:</label>
+        <input type="file" id="inputFeatures" accept=".shp">
+
+        <label for="eraseFeature">Erase Feature:</label>
+        <input type="file" id="eraseFeature" accept=".shp">
+
+        <label for="outputFeatures">Output Features:</label>
+        <input type="text" id="outputFeatures" placeholder="Enter output features location">
+
+        <!-- Add more input fields for other parameters -->
+
+        <button onclick="executeOverlayTool()">Execute Tool</button>
+        <button onclick="closeOverlayDialog()">Close</button>
+    </div>
+
+    <!-- Main toolbar -->
+    <div class="toolbar">
+        <button onclick="openOverlayDialog('erase')">Erase</button>
+        <!-- Add buttons for other overlay operations -->
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize Leaflet map
+        var map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        function openOverlayDialog(tool) {
+            // Display the overlay analysis dialog
+            document.getElementById(tool + 'Dialog').style.display = 'block';
+        }
+
+        function closeOverlayDialog() {
+            // Close the erase analysis dialog
+            document.getElementById('eraseDialog').style.display = 'none';
+        }
+
+        function executeOverlayTool() {
+            // Get selected overlay operation
+            var overlayOperation = "Erase";
+
+            // Get parameters based on the selected operation
+            var inputFeatures = document.getElementById('inputFeatures').value;
+            var eraseFeature = document.getElementById('eraseFeature').value;
+            var outputFeatures = document.getElementById('outputFeatures').value;
+
+            // Make an API call using fetch
+            fetch('YOUR_API_ENDPOINT', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Add any necessary headers, such as authentication
+                    },
+                    body: JSON.stringify({
+                        operation: overlayOperation,
+                        inputFeatures: inputFeatures,
+                        eraseFeature: eraseFeature,
+                        outputFeatures: outputFeatures,
+                        // Add more parameters as needed
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the API response
+                    console.log(data);
+                    // Add logic to update the map or show results
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+            // Close the dialog after executing the tool
+            closeOverlayDialog();
+        }
+    </script>
+
+</body>
+
+</html>
+
+//erase
+
+//identity
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+
+        .overlay-dialog {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Higher z-index for overlay dialog */
+            max-width: 300px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .leaflet-container {
+            z-index: 1000; /* Lower z-index for the map */
+            height: 400px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input, .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Leaflet Map Container -->
+<div id="map" class="leaflet-container"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('identity')">Identity</button>
+    <!-- Add buttons for other overlay operations -->
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Identity</h2>
+
+    <!-- Input fields for parameters -->
+    <label for="inputFeatures">Input Features:</label>
+    <input type="file" id="inputFeatures" accept=".geojson">
+    
+    <label for="identityFeature">Identity Feature:</label>
+    <input type="file" id="identityFeature" accept=".geojson">
+
+    <label for="joinattribute">Join Attribute:</label>
+    <input type="text" id="joinattribute" placeholder="Enter join attribute">
+
+    <label for="XYtolerance">XY tolerance:</label>
+    <input type="text" id="XYtolerance" placeholder="Enter XY tolerance">
+
+    <label for="distanceType">Distance Type:</label>
+    <select id="distanceType">
+        <option value="value">Value</option>
+        <option value="field">Field</option>
+    </select>
+    
+    <label for="outputFeatures">Output Features:</label>
+    <input type="text" id="outputFeatures" placeholder="Enter output features location">
+
+    <!-- Add more input fields for other parameters -->
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/turf@7.0.0"></script>
+<script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        // Display the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        // Close the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        // Get selected overlay operation
+        var overlayOperation = "Identity";
+
+        // Get parameters based on the selected operation
+        var inputFeatures = document.getElementById('inputFeatures').files[0];
+        var identityFeature = document.getElementById('identityFeature').files[0];
+        var joinattribute = document.getElementById('joinattribute').value;
+        var XYtolerance = document.getElementById('XYtolerance').value;
+        var distanceType = document.getElementById('distanceType').value;
+        var outputFeatures = document.getElementById('outputFeatures').value;
+
+        // Validate input
+        if (!inputFeatures || !identityFeature) {
+            alert("Please provide input and identity features.");
+            return;
+        }
+
+        // Read input GeoJSON files
+        var readerInput = new FileReader();
+        readerInput.onload = function (eventInput) {
+            var inputData = JSON.parse(eventInput.target.result);
+
+            var readerIdentity = new FileReader();
+            readerIdentity.onload = function (eventIdentity) {
+                var identityData = JSON.parse(eventIdentity.target.result);
+
+                // Perform Turf.js Identity operation
+                var identityResult = turf.union(inputData, identityData);
+
+                // Handle the result as needed, for example, display it on the map
+                L.geoJSON(identityResult).addTo(map);
+
+                // Close the dialog after executing the tool
+                closeOverlayDialog();
+            };
+
+            readerIdentity.readAsText(identityFeature);
+        };
+
+        readerInput.readAsText(inputFeatures);
+    }
+</script>
+
+</body>
+</html>
+//Identity
+
+//mask
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+
+        .overlay-dialog {
+            display: none;
+            background-color: #fff;
+            border: 3px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Higher z-index for overlay dialog */
+            max-width: 250px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .overlay-dialog label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .overlay-dialog input, .overlay-dialog select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+
+        .overlay-dialog button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .map-container {
+            height: 70vh;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Leaflet Map Container -->
+<div id="map" class="map-container"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('mask')">Mask</button>
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Mask</h2>
+
+    <!-- Input fields for parameters -->
+    <label for="inputFeatures">Input Features:</label>
+    <input type="file" id="inputFeatures" accept=".shp">
+    
+    <label for="outputFeatures">Output Features:</label>
+    <input type="text" id="outputFeatures" placeholder="Enter output features location">
+
+    <label for="joinattribute">Join Attribute:</label>
+    <select id="joinattribute">
+        <option value="none">None</option>
+        <option value="list">List</option>
+        <option value="all">All</option>
+    </select>
+    
+    <label for="XYtolerance">XY Tolerance:</label>
+    <input type="text" id="XYtolerance" placeholder="Enter XY tolerance">
+    
+    <label for="distanceType">Distance Type:</label>
+    <select id="distanceType">
+        <option value="value">Value</option>
+        <option value="field">Field</option>
+    </select>
+    <label for="OutputType">Output Type:</label>
+    <select id="OutputType">
+        <option value="Input">Full</option>
+        <option value="line">Left</option>
+        <option value="point">Right</option>
+    </select>
+
+    <!-- Add more input fields for other parameters -->
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    // Initialize Leaflet map
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        // Display the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        // Close the overlay analysis dialog
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        // Get selected overlay operation
+        var overlayOperation = "mask"; // Example: Defaulting to mask
+
+        // Get parameters based on the selected operation
+        var inputFeatures = document.getElementById('inputFeatures').value;
+        var outputFeatures = document.getElementById('outputFeatures').value;
+        var joinAttribute = document.getElementById('joinattribute').value;
+        var distanceType = document.getElementById('distanceType').value;
+        var XYtolerance = document.getElementById('XYtolerance').value;
+        var outputType = document.getElementById('OutputType').value;
+
+        // Construct API endpoint based on dev.gis API documentation
+        var apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+        var apiEndpoint = 'https://api.dev.gis/v1/overlay/' + overlayOperation;
+
+        // Example: Constructing a simple POST request
+        var apiRequest = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + apiKey,
+            },
+            body: JSON.stringify({
+                inputFeatures: inputFeatures,
+                outputFeatures: outputFeatures,
+                joinAttribute: joinAttribute,
+                distanceType: distanceType,
+                XYtolerance: XYtolerance,
+                outputType: outputType,
+            }),
+        };
+
+        // Make the API call
+        fetch(apiEndpoint, apiRequest)
+            .then(response => response.json())
+            .then(data => {
+                // Handle the API response
+                alert("Overlay analysis: " + overlayOperation + " successful!\nResponse: " + JSON.stringify(data));
+            })
+            .catch(error => {
+                alert("Error during overlay analysis. Error: " + error.message);
+            });
+
+        // Close the dialog after executing the tool
+        closeOverlayDialog();
+    }
+</script>
+
+</body>
+</html>
+
+//mask
+
+//union
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIS Overlay Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100vh;
+        }
+
+        .overlay-dialog {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1001; /* Higher z-index for overlay dialog */
+            max-width: 300px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .leaflet-container {
+            z-index: 1000; /* Lower z-index for the map */
+            height: 400px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .toolbar button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map" class="leaflet-container"></div>
+
+<!-- Main toolbar -->
+<div class="toolbar">
+    <button onclick="openOverlayDialog('union')">Union</button>
+    <!-- Add buttons for other overlay operations -->
+</div>
+
+<!-- Overlay Analysis Dialog -->
+<div id="overlayDialog" class="overlay-dialog">
+    <h2 style="text-align: center; color: #333;">Union</h2>
+
+    <!-- Input fields for parameters -->
+    <div class="input-group">
+        <label for="inputFeatures">Input Features:</label>
+        <input type="file" id="inputFeatures" accept=".geojson">
+    </div>
+
+    <div class="input-group">
+        <label for="outputFeatures">Output Features:</label>
+        <input type="file" id="outputFeatures" accept=".geojson">
+    </div>
+
+    <!-- XY and tolerance fields in the same input group -->
+    <div class="input-group">
+        <label for="joinattribute">Join attribute:</label>
+        <input type="text" id="joinattribute" placeholder="Enter join attribute">
+    </div>
+
+    <div class="input-group">
+        <label for="XYtolerance">XY tolerance:</label>
+        <input type="text" id="XYtolerance" placeholder="Enter XY tolerance">
+    </div>
+
+    <!-- Add more input fields for other parameters -->
+
+    <button onclick="executeOverlayTool()">Execute Tool</button>
+    <button onclick="closeOverlayDialog()">Close</button>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/turf@7.0.0"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+<script>
+    var map = L.map('map').setView([0, 0], 2);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    }).addTo(map);
+
+    function openOverlayDialog(tool) {
+        document.getElementById('overlayDialog').style.display = 'block';
+    }
+
+    function closeOverlayDialog() {
+        document.getElementById('overlayDialog').style.display = 'none';
+    }
+
+    function executeOverlayTool() {
+        var inputFeatures = document.getElementById('inputFeatures').files[0];
+        var outputFeatures = document.getElementById('outputFeatures').files[0];
+        var joinattribute = document.getElementById('joinattribute').value;
+        var XYtolerance = parseFloat(document.getElementById('XYtolerance').value);
+
+        if (!inputFeatures || !outputFeatures) {
+            alert("Please provide input and output features.");
+            return;
+        }
+
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+            var inputData = JSON.parse(event.target.result);
+
+            // Perform Turf.js Union operation
+            var unionResult = turf.union(inputData.features[0], inputData.features[1]);
+
+            // Handle the result as needed, for example, display it on the map
+            L.geoJSON(unionResult).addTo(map);
+
+            // Close the dialog after executing the tool
+            closeOverlayDialog();
+        };
+
+        reader.readAsText(inputFeatures);
+    }
+</script>
+
+</body>
+</html>
+
+
+
+//union
+
+
+//Code by Samra And Aimen
